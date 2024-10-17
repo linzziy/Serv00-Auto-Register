@@ -21,7 +21,7 @@ ocr = ddddocr.DdddOcr()
 app = FastAPI()
 
 # 静态文件目录
-os.makedirs("/static", exist_ok=True)
+os.makedirs("static", exist_ok=True)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 cache = {}
 
@@ -230,6 +230,8 @@ def background_task(input_email):
     logger.info(f"{email} {first_name} {last_name} {username}")
 
     with requests.Session() as session:
+        session.proxies.update({'http': 'http://192.168.5.99:8080', 'https': 'http://192.168.5.99:8080'})
+        ra = session.get('http://cip.cc/')
         logger.info("获取网页信息")
         resp = session.get(url=url1, headers=header1, impersonate="chrome124")
         print(resp.status_code)
